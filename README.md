@@ -12,6 +12,26 @@ Welcome to **HeroVersus: Battle Arena**, a dynamic 2-player 2D fighting game dev
 
 > **Note**: This repository was originally created under @cityteaching and has been cloned here for public visibility.
 
+## Features
+
+- **Two-Player Gameplay**: Engage in intense two-player battles with a friend on the same keyboard.
+- **Dynamic Arenas**: Each arena has unique elements and obstacles that can influence the outcome of the battle.
+- **Customizable Characters**: Choose from a variety of characters, each with unique abilities and tactics.
+- **Physics-Driven Interactions**: Utilize a modified version of the [JBox2D physics engine](https://github.com/jbox2d/jbox2d.git) for realistic movement and collision effects.
+
+## Tech Stack
+
+![Java](https://img.shields.io/badge/Java-orange?style=for-the-badge&logo=coffeescript)
+![Java Swing](https://img.shields.io/badge/Java_Swing-orange?style=for-the-badge&logo=coffeescript)
+![JBox2D City Engine](https://img.shields.io/badge/JBox2D-orange?style=for-the-badge&logo=coffeescript)
+
+## Learning Outcomes
+
+- **Object-Oriented Programming**: Applied advanced object-oriented concepts such as interfaces, abstract classes, and encapsulation to structure the game efficiently.
+- **Java GUI Development**: Developed interactive menus and interfaces using Java's GUI toolkit.
+- **Game Level Design**: Designed multiple game levels, each with its own set of challenges and characteristics.
+- **Project Milestones**: Delivered the project in phases, adhering to deadlines and integrating feedback at each milestone.
+
 ## Gameplay Screenshots
 
 ### Title Screen
@@ -37,20 +57,6 @@ Here, the game is shown paused in the mysterious void level. The pause menu offe
 ![combat-2](images/combat-2.PNG)
 
 Another example of combat, this time set in the hangar level, showcasing the uniqueness of this environment. The screenshot highlights the dynamic and interactive gameplay elements that differ with each level.
-
-## Key Features
-
-- **Two-Player Gameplay**: Engage in intense two-player battles with a friend on the same keyboard.
-- **Dynamic Arenas**: Each arena has unique elements and obstacles that can influence the outcome of the battle.
-- **Customizable Characters**: Choose from a variety of characters, each with unique abilities and tactics.
-- **Physics-Driven Interactions**: Utilize a modified version of the [JBox2D physics engine](https://github.com/jbox2d/jbox2d.git) for realistic movement and collision effects.
-
-## Learning Outcomes
-
-- **Object-Oriented Programming**: Applied advanced object-oriented concepts such as interfaces, abstract classes, and encapsulation to structure the game efficiently.
-- **Java GUI Development**: Developed interactive menus and interfaces using Java's GUI toolkit.
-- **Game Level Design**: Designed multiple game levels, each with its own set of challenges and characteristics.
-- **Project Milestones**: Delivered the project in phases, adhering to deadlines and integrating feedback at each milestone.
 
 ## Getting Started
 
