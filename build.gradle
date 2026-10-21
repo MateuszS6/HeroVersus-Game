@@ -22,7 +22,3 @@ application {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
-
-tasks.named('run', JavaExec) {
-    workingDir = projectDir
-}

@@ -36,25 +36,25 @@ Welcome to **HeroVersus: Battle Arena**, a dynamic 2-player 2D fighting game dev
 
 ### Title Screen
 
-![title-screen](images/title-screen.PNG)
+![title-screen](docs/screenshots/title-screen.PNG)
 
 This screenshot shows the game's title screen, featuring a captivating background along with the main menu options: Play, Controls, and Quit. The design sets the mood for the adventures that await the player.
 
 ### Combat in Wild Forest Level
 
-![combat](images/combat.PNG)
+![combat](docs/screenshots/combat.PNG)
 
 This image captures a moment of intense combat in the wild forest level. The player HUD is displayed at the top, showing the player IDs and their respective health bars, providing critical gameplay information during battles.
 
 ### Game Paused in Void Level
 
-![game-paused](images/game-paused.PNG)
+![game-paused](docs/screenshots/game-paused.PNG)
 
 Here, the game is shown paused in the mysterious void level. The pause menu offers options to 'Exit to Main Menu' or 'Resume' the game, allowing players to take a break or strategically plan their next move.
 
 ### Combat in Hangar Level
 
-![combat-2](images/combat-2.PNG)
+![combat-2](docs/screenshots/combat-2.PNG)
 
 Another example of combat, this time set in the hangar level, showcasing the uniqueness of this environment. The screenshot highlights the dynamic and interactive gameplay elements that differ with each level.
 
