@@ -12,11 +12,16 @@ java {
 }
 
 dependencies {
-    implementation fileTree(dir: 'lib', include: ['*.jar'])
+    implementation files('lib/CityEngine.jar')
+    runtimeOnly 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
 }
 
 application {
     mainClass = 'game.Game'
+}
+
+repositories {
+    mavenCentral()
 }
 
 tasks.withType(JavaCompile).configureEach {

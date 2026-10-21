@@ -1,14 +1,13 @@
-# Local runtime libraries
+# Local runtime library
 
-The game requires the following local libraries:
+The project requires `CityEngine.jar` in this directory.
 
-- `CityEngine.jar`
-- `jlayer-1.0.1-2.jar`
-- `mp3spi-1.9.5-2.jar`
-- `tritonus-share-0.3.7-3.jar`
+CityEngine provides the game engine and already embeds its required JBox2D
+classes. Do not add a separate JBox2D dependency, because that would introduce
+duplicate classes.
 
-Copy them into this directory before building.
+The MP3 playback libraries are downloaded automatically by Gradle from Maven
+Central.
 
-`CityEngine.jar` already contains its required JBox2D classes. Do not add a separate JBox2D dependency, because that would introduce duplicate classes.
-
-The binary JARs are intentionally excluded from Git until their redistribution terms have been confirmed.
+`CityEngine.jar` remains excluded from Git until its redistribution terms can
+be confirmed.
