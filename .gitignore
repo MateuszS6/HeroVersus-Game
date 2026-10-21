@@ -22,3 +22,19 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Gradle and VS Code build output
+.gradle/
+build/
+bin/
+
+# The Gradle wrapper JAR is intentionally versioned
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE-specific metadata
+.idea/
+.vscode/
+*.iml
+
+# Legacy IDE build output
+out/

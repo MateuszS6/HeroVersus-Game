@@ -1,0 +1,28 @@
+plugins {
+    id 'application'
+}
+
+group = 'com.mateuszs6'
+version = '1.0.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'lib', include: ['*.jar'])
+}
+
+application {
+    mainClass = 'game.Game'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.named('run', JavaExec) {
+    workingDir = projectDir
+}
