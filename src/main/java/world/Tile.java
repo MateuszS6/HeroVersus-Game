@@ -1,8 +1,9 @@
 package world;
 
-import city.cs.engine.BodyImage;
 import arenas.BattleArena;
+import city.cs.engine.BodyImage;
 import game.GameView;
+import game.Resources;
 
 public class Tile extends Platform {
     public static final String TOP = "top.png";
@@ -30,6 +31,6 @@ public class Tile extends Platform {
 
     public Tile(BattleArena w, String type, float x, float y) {
         super(w, GameView.GRID, GameView.GRID, x, y);
-        addImage(new BodyImage(type, GameView.GRID * 2));
+        addImage(new BodyImage(Resources.url(type), GameView.GRID * 2));
     }
 }

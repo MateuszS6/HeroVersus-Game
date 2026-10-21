@@ -1,17 +1,18 @@
 package game;
 
-import arenas.BattleArena;
-import city.cs.engine.SoundClip;
-import menu.ControlsPage;
-import menu.PlayScreen;
-import menu.TitleScreen;
+import java.awt.Dimension;
+import java.io.IOException;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.Dimension;
-import java.io.IOException;
+
+import arenas.BattleArena;
+import city.cs.engine.SoundClip;
+import menu.ControlsPage;
+import menu.PlayScreen;
+import menu.TitleScreen;
 
 /** Main game entry point. */
 public final class Game {
@@ -23,7 +24,8 @@ public final class Game {
     private SoundClip soundtrack;
     private BattleArena arena;
 
-    /** Game constructor.
+    /**
+     * Game constructor.
      * <p>
      * Creates a new game with the title screen and soundtrack.
      */
@@ -33,7 +35,8 @@ public final class Game {
         window = new JFrame("HeroVersus");
 
         screen = new TitleScreen(this).getMainPanel();
-        // Window would have to be [816x639] to ensure the correct GameView size [800x600]
+        // Window would have to be [816x639] to ensure the correct GameView size
+        // [800x600]
         screen.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         window.add(screen); // Add the component to the window
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,8 +54,9 @@ public final class Game {
 
     public void setSoundtrack(String fileName) {
         try {
-            if (soundtrack != null) soundtrack.stop();
-            soundtrack = new SoundClip("assets/sound/music/" + fileName);
+            if (soundtrack != null)
+                soundtrack.stop();
+            soundtrack = new SoundClip(Resources.url("assets/sound/music/" + fileName));
             soundtrack.setVolume(0.3);
             soundtrack.loop();
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
@@ -61,13 +65,15 @@ public final class Game {
     }
 
     public void toggleSoundtrack() {
-        if (arena.isPaused()) soundtrack.pause();
-        else soundtrack.resume();
+        if (arena.isPaused())
+            soundtrack.pause();
+        else
+            soundtrack.resume();
     }
 
     public void playSound(String fileName) {
         try {
-            new SoundClip("assets/sound/" + fileName).play();
+            new SoundClip(Resources.url("assets/sound/" + fileName)).play();
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -100,13 +106,13 @@ public final class Game {
         window.pack();
     }
 
-/*
-    public void restartArena(BattleArena w) {
-        arena = w;
-        view = new GameView(arena, WIDTH, HEIGHT);
-        switchPanel(view);
-        view.repaint();
-        arena.start();
-    }
-*/
+    /*
+     * public void restartArena(BattleArena w) {
+     * arena = w;
+     * view = new GameView(arena, WIDTH, HEIGHT);
+     * switchPanel(view);
+     * view.repaint();
+     * arena.start();
+     * }
+     */
 }

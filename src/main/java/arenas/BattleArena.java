@@ -1,36 +1,41 @@
 package arenas;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
+
+import javax.swing.ImageIcon;
+
+import org.jbox2d.common.Vec2;
+
 import city.cs.engine.World;
 import game.Game;
 import game.GameView;
 import game.Panels;
-import org.jbox2d.common.Vec2;
+import game.Resources;
 import player.Characters;
 import player.Player;
 import world.DeathZone;
 import world.SideBorder;
 import world.Tile;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.geom.Point2D;
-
 public abstract class BattleArena extends World {
     // TODO: 24/04/2023
-    //  1 life, best of 3, winning player chooses next arena to play in
+    // 1 life, best of 3, winning player chooses next arena to play in
     // TODO: 24/04/2023
-    //  Add PRACTICE ARENA with grey tiles - unlimited respawns, advances to arenas on completion OR on SKIP button
+    // Add PRACTICE ARENA with grey tiles - unlimited respawns, advances to arenas
+    // on completion OR on SKIP button
     // TODO: 24/04/2023
-    //  Desert arena, minimalistic/paper arena
+    // Desert arena, minimalistic/paper arena
     private final Game game;
     private final String title;
     private final String tilePath;
-    private final SideBorder
-            left,
+    private final SideBorder left,
             right;
-    private final Player
-            player1,
+    private final Player player1,
             player2;
     private int winner;
     private Color bgColour;
@@ -43,17 +48,19 @@ public abstract class BattleArena extends World {
      * World constructor.
      * <p>
      * Creates a new arena based on the calling subclass.
-     * @param g the game containing the arena
-     * @param title the name of the arena
-     * @param localTilePath the file path for tile images of the arena under assets/tileset
-     * @param spawn1 the spawn location for player 1
-     * @param spawn2 the spawn location for player 2
+     * 
+     * @param g             the game containing the arena
+     * @param title         the name of the arena
+     * @param localTilePath the classpath subdirectory under assets/tileset
+     *                      containing the arena tiles
+     * @param spawn1        the spawn location for player 1
+     * @param spawn2        the spawn location for player 2
      */
     public BattleArena(Game g,
-                       String title,
-                       String localTilePath,
-                       Vec2 spawn1,
-                       Vec2 spawn2) {
+            String title,
+            String localTilePath,
+            Vec2 spawn1,
+            Vec2 spawn2) {
         game = g;
         this.title = title;
         tilePath = "assets/tileset/" + localTilePath + "/";
@@ -110,11 +117,12 @@ public abstract class BattleArena extends World {
     }
 
     public void setBackground(String fileName) {
-        bgImage = new ImageIcon("assets/background/" + fileName).getImage();
+        bgImage = new ImageIcon(Resources.url("assets/background/" + fileName)).getImage();
     }
 
     public void setDeathZone(BattleArena w, float y) {
-        if (deathZone == null) deathZone = new DeathZone(w, right.getPosition().x, y);
+        if (deathZone == null)
+            deathZone = new DeathZone(w, right.getPosition().x, y);
     }
 
     public abstract void populate();
@@ -128,8 +136,10 @@ public abstract class BattleArena extends World {
         int middle = Game.HEIGHT / 2;
 
         // Arena title
-        if (this instanceof RoyalArena) g.setColor(Color.BLACK);
-        else g.setColor(Color.WHITE);
+        if (this instanceof RoyalArena)
+            g.setColor(Color.BLACK);
+        else
+            g.setColor(Color.WHITE);
         g.setFont(new Font("Impact", Font.PLAIN, 26));
         v.drawText(g, title, centre, 60);
 
@@ -147,11 +157,13 @@ public abstract class BattleArena extends World {
 
         // Player 1 HUD
         player1.drawStats(g, w, h, x, y);
-        if (player1.getRespawns() > 0) v.drawText(g, "Player 1", p1.x, p1.y - 5);
+        if (player1.getRespawns() > 0)
+            v.drawText(g, "Player 1", p1.x, p1.y - 5);
 
         // Player 2 HUD
         player2.drawStats(g, w, h, v.getWidth() - (w + x), y);
-        if (player2.getRespawns() > 0) v.drawText(g, "Player 2", p2.x, p2.y - 45);
+        if (player2.getRespawns() > 0)
+            v.drawText(g, "Player 2", p2.x, p2.y - 45);
     }
 
     public boolean isPaused() {
@@ -166,22 +178,24 @@ public abstract class BattleArena extends World {
         isEnded = roundEnded;
         isPaused = !isPaused;
         game.toggleSoundtrack();
-        if (isPaused) stop();
-        else start();
+        if (isPaused)
+            stop();
+        else
+            start();
     }
 
-/*
-    public void restart() {
-        BattleArena w = switch (title) {
-            case "ROYAL ARENA" -> new RoyalArena(game);
-            case "WILD FOREST" -> new WildForest(game);
-            case "THE VOID" -> new TheVoid(game);
-            case "OLD HANGAR" -> new OldHangar(game);
-            default -> throw new RuntimeException("ARENA IS NULL");
-        };
-        game.restartArena(w);
-    }
-*/
+    /*
+     * public void restart() {
+     * BattleArena w = switch (title) {
+     * case "ROYAL ARENA" -> new RoyalArena(game);
+     * case "WILD FOREST" -> new WildForest(game);
+     * case "THE VOID" -> new TheVoid(game);
+     * case "OLD HANGAR" -> new OldHangar(game);
+     * default -> throw new RuntimeException("ARENA IS NULL");
+     * };
+     * game.restartArena(w);
+     * }
+     */
 
     public void exit() {
         game.switchToMenu(Panels.TITLE_SCREEN);

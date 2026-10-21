@@ -1,16 +1,27 @@
 package characters;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import game.Resources;
 
 /**
  * Very basic polygon editor.
@@ -19,8 +30,10 @@ import java.util.List;
  * THIS IS A QUICK DIRTY HACK.
  * IT IS NOT PROPERLY DOCUMENTED AND WILL NOT BE SUPPORTED. GOOD LUCK.
  * <p>
- * Each time a point is added, deleted or moved, a comma-separated list of coordinates
- * is printed to the console; this text can be copied and pasted as a parameter list
+ * Each time a point is added, deleted or moved, a comma-separated list of
+ * coordinates
+ * is printed to the console; this text can be copied and pasted as a parameter
+ * list
  * for the city.cs.engine.PolygonShape(float... coords) constructor BUT you
  * will have problems if the polygon is not convex (remember though that a Body
  * can have multiple shapes, so you can get pretty much any shaped body by using
@@ -28,31 +41,41 @@ import java.util.List;
  * <p>
  * If the editor is initialised with a non-null file name parameter, the editor
  * will attempt to open the image file and display a scaled up version as
- * background (allowing you to trace a polygon approximation of the image outline).
+ * background (allowing you to trace a polygon approximation of the image
+ * outline).
  * <p>
- * To add the next point to the polygon, left click where you want it. 
- * To delete an existing point, right click on it. 
- * To move a point, drag it. It is not currently possible to insert a new 
+ * To add the next point to the polygon, left click where you want it.
+ * To delete an existing point, right click on it.
+ * To move a point, drag it. It is not currently possible to insert a new
  * point between two existing points; sorry.
  * <p>
- * If the editor is started from the command line, the output from a previous edit
- * can be fed back in for re-editing (after the image file name, if any). The image
+ * If the editor is started from the command line, the output from a previous
+ * edit
+ * can be fed back in for re-editing (after the image file name, if any). The
+ * image
  * file name can also be optionally followed by a scale specifier.
  * <p>
  * Example 1:
  * <p>
- *  java PolygonEditor yellow-bird.gif -height 2.25
+ * java PolygonEditor yellow-bird.gif -height 2.25
  * <p>
- * lets you draw around the yellow-bird.gif image, generating polygon vertex coordinates on the
- * assumption that the image will be scaled to a height of 2.25 world units (metres) when used
- * in the game (this can be useful if your game involves zooming the display, otherwise
- * the zoomed image will look blocky).  If you don't specify the height, it defaults to 1.
+ * lets you draw around the yellow-bird.gif image, generating polygon vertex
+ * coordinates on the
+ * assumption that the image will be scaled to a height of 2.25 world units
+ * (metres) when used
+ * in the game (this can be useful if your game involves zooming the display,
+ * otherwise
+ * the zoomed image will look blocky). If you don't specify the height, it
+ * defaults to 1.
  * <p>
  * Example 2:
  * <p>
- *  java PolygonEditor yellow-bird.gif -height 2.25 0.149f,0.975f, 0.775f,0.193f, 0.772f,-0.099f, 0.401f,-0.928f, -0.36f,-0.922f, -0.719f,-0.025f, -0.725f,0.163f, -0.14f,0.972f
+ * java PolygonEditor yellow-bird.gif -height 2.25 0.149f,0.975f, 0.775f,0.193f,
+ * 0.772f,-0.099f, 0.401f,-0.928f, -0.36f,-0.922f, -0.719f,-0.025f,
+ * -0.725f,0.163f, -0.14f,0.972f
  * <p>
- * lets you edit the polygon drawn in a previous session around the image yellow-bird.gif).
+ * lets you edit the polygon drawn in a previous session around the image
+ * yellow-bird.gif).
  */
 public class PolygonEditor extends JPanel {
     private static double WIDTH = 500;
@@ -91,6 +114,7 @@ public class PolygonEditor extends JPanel {
     /**
      * Initialise a new editor with background image specified by given file name.
      * If file name is null, no image will be loaded.
+     * 
      * @param f image file name
      */
     private PolygonEditor(String f, float boxHeight) {
@@ -98,9 +122,11 @@ public class PolygonEditor extends JPanel {
         this.boxHeight = boxHeight;
         System.out.println("height = " + boxHeight);
         powerOf10 = 1;
-        while (powerOf10 * boxHeight < 300) powerOf10 *= 10;
+        while (powerOf10 * boxHeight < 300)
+            powerOf10 *= 10;
 
-        if (f != null) icon = new ImageIcon(f);
+        if (f != null)
+            icon = loadIcon(f);
         if (icon == null) {
             pixelScale = SCALE;
             bitmapWidth = WIDTH / SCALE;
@@ -138,7 +164,8 @@ public class PolygonEditor extends JPanel {
 
             public void mouseReleased(MouseEvent e) {
                 String mods = MouseEvent.getMouseModifiersText(e.getModifiers());
-                if (!mods.equals("Button1")) points.remove(currentVertex);
+                if (!mods.equals("Button1"))
+                    points.remove(currentVertex);
                 currentVertex = -1;
                 updateView();
             }
@@ -152,6 +179,17 @@ public class PolygonEditor extends JPanel {
         });
     }
 
+    // My custom method
+    private static ImageIcon loadIcon(String path) {
+        Path file = Path.of(path);
+
+        if (Files.isRegularFile(file)) {
+            return new ImageIcon(file.toAbsolutePath().toString());
+        }
+
+        return new ImageIcon(Resources.url(path));
+    }
+
     /** Find the index of a nearby vertex, or -1 if none. */
     int findVertex(Point2D.Float p) {
         double close = 5 * scale;
@@ -163,12 +201,14 @@ public class PolygonEditor extends JPanel {
         return -1;
     }
 
-    /** The current list of polygon vertex coordinates as a comma-separated string. */
-    public String toString()
-    {
+    /**
+     * The current list of polygon vertex coordinates as a comma-separated string.
+     */
+    public String toString() {
         String s = "";
         for (Point2D.Float p : points) {
-            if (s.length() > 0) s += ", ";
+            if (s.length() > 0)
+                s += ", ";
             s += round(p.x) + "f" + "," + round(p.y) + "f";
         }
         return s;
@@ -176,39 +216,43 @@ public class PolygonEditor extends JPanel {
 
     /**
      * The unscaled point corresponding to a screen position.
-     * @param x    the x-coordinate of the screen point.
-     * @param y    the y-coordinate of the screen point.
+     * 
+     * @param x the x-coordinate of the screen point.
+     * @param y the y-coordinate of the screen point.
      * @return the unscaled point
      */
     private Point2D.Float toGridPoint(int x, int y) {
-        return new Point2D.Float((float)((x - centreX)*scale), (float)((centreY - y)*scale));
+        return new Point2D.Float((float) ((x - centreX) * scale), (float) ((centreY - y) * scale));
     }
 
     private Point2D.Float screenPosition(Point2D.Float p) {
-        return new Point2D.Float((float)(centreX + p.x/scale), (float)(centreY - p.y/scale));
+        return new Point2D.Float((float) (centreX + p.x / scale), (float) (centreY - p.y / scale));
     }
-    
+
     /** Draw the image (if any) and polygon. */
-    public void paintComponent(Graphics g)
-    {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D)g;
+        Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
         for (int i = 0; i < this.getHeight(); i += 5)
-            for (int j = 0; j < this.getWidth(); j += 5){
-                if (i % 2 == 0){
-                    if (j % 2 == 0)  g.setColor(Color.pink);
-                    else g.setColor(Color.yellow);
-                }
-                else{
-                    if (j % 2 == 0)  g.setColor(Color.yellow);
-                    else g.setColor(Color.pink);
+            for (int j = 0; j < this.getWidth(); j += 5) {
+                if (i % 2 == 0) {
+                    if (j % 2 == 0)
+                        g.setColor(Color.pink);
+                    else
+                        g.setColor(Color.yellow);
+                } else {
+                    if (j % 2 == 0)
+                        g.setColor(Color.yellow);
+                    else
+                        g.setColor(Color.pink);
                 }
                 g.fillRect(j, i, 5, 5);
             }
-        if (icon != null) icon.paintIcon(this, g, 0, 0);
+        if (icon != null)
+            icon.paintIcon(this, g, 0, 0);
 
         // draw the polygon
         g2.setColor(Color.BLUE);
@@ -223,18 +267,23 @@ public class PolygonEditor extends JPanel {
             prev = p;
         }
     }
+
     /**
      * Open an editor.
-     * If first command-line argument is not a number, assume it is an image file name.
+     * If first command-line argument is not a number, assume it is an image file
+     * name.
      * The optional image file name can be optionally followed by a scale specifier
      * of the form -scale (floating-point number)
-     * Any remaining arguments are assumed to be a comma-separated list of polygon vertex coordinates,
-     * in the same format as the parameter list to city.soi.platform.PolygonShape(float...).
+     * Any remaining arguments are assumed to be a comma-separated list of polygon
+     * vertex coordinates,
+     * in the same format as the parameter list to
+     * city.soi.platform.PolygonShape(float...).
+     * 
      * @param args command line arguments.
      */
     public static void main(String[] args) {
         String knight = "assets/character/FreeKnight/Colour1/NoOutline/120x80_gifs/left_idle.gif";
-        String skeleton = "assets/Skeleton/120x80_gifs/right_attack2.gif";
+        String skeleton = "assets/character/Skeleton/120x80_gifs/right_attack2.gif";
         String wizard = "assets/character/Wizard/gif/r_attack.gif";
         String fileName = wizard;
         float boxHeight = 9;
@@ -275,7 +324,8 @@ public class PolygonEditor extends JPanel {
                         x = xy;
                         gotX = true;
                     }
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
                 i++;
             }
         }
@@ -287,8 +337,7 @@ public class PolygonEditor extends JPanel {
     }
 
     /** Update the display and print the current coordinate list to console. */
-    private void updateView()
-    {
+    private void updateView() {
         System.out.println(this);
         repaint();
     }
