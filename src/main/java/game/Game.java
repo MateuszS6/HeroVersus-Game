@@ -11,6 +11,7 @@ import javax.swing.SwingUtilities;
 
 import arenas.BattleArena;
 import city.cs.engine.SoundClip;
+import menu.AboutPage;
 import menu.ControlsPage;
 import menu.PlayScreen;
 import menu.TitleScreen;
@@ -23,6 +24,7 @@ public final class Game {
     private final JFrame window;
     private JPanel screen;
     private SoundClip soundtrack;
+    private String soundtrackFileName;
     private BattleArena arena;
 
     /**
@@ -55,11 +57,20 @@ public final class Game {
     }
 
     public void setSoundtrack(String fileName) {
+        if (soundtrack != null && fileName.equals(soundtrackFileName))
+            return;
+
         try {
+            SoundClip nextSoundtrack = new SoundClip(
+                    Resources.url("assets/sound/music/" + fileName));
+
+            nextSoundtrack.setVolume(0.3);
+
             if (soundtrack != null)
                 soundtrack.stop();
-            soundtrack = new SoundClip(Resources.url("assets/sound/music/" + fileName));
-            soundtrack.setVolume(0.3);
+
+            soundtrack = nextSoundtrack;
+            soundtrackFileName = fileName;
             soundtrack.loop();
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             throw new RuntimeException(e);
@@ -82,11 +93,11 @@ public final class Game {
     }
 
     public void switchToMenu(Panels panel) {
-        window.remove(screen);
         screen = switch (panel) {
             case TITLE_SCREEN -> new TitleScreen(this);
             case PLAY_SCREEN -> new PlayScreen(this);
             case CONTROLS_PAGE -> new ControlsPage(this);
+            case ABOUT_PAGE -> new AboutPage(this);
         };
 
         screen.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -115,13 +126,11 @@ public final class Game {
         SwingUtilities.invokeLater(view::requestFocusInWindow);
     }
 
-    /*
-     * public void restartArena(BattleArena w) {
-     * arena = w;
-     * view = new GameView(arena, WIDTH, HEIGHT);
-     * switchPanel(view);
-     * view.repaint();
-     * arena.start();
-     * }
-     */
+    // public void restartArena(BattleArena w) {
+    //     arena = w;
+    //     view = new GameView(arena, WIDTH, HEIGHT);
+    //     switchPanel(view);
+    //     view.repaint();
+    //     arena.start();
+    // }
 }

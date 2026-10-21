@@ -23,8 +23,9 @@ public class ControlsPage extends MenuBackground {
 
         content.add(MenuStyles.label(
                 "Controls",
-                42,
-                Font.BOLD,
+                MenuStyles.HEADING_FONT,
+                36,
+                Font.PLAIN,
                 MenuStyles.SECONDARY_TEXT));
 
         MenuStyles.gap(content, 30);
@@ -76,14 +77,14 @@ public class ControlsPage extends MenuBackground {
 
     private static JLabel textCell(String text) {
         JLabel label = new JLabel(text, SwingConstants.CENTER);
-        label.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 17));
+        label.setFont(new Font(MenuStyles.CONTROL_FONT, Font.BOLD, 20));
         label.setForeground(Color.WHITE);
         return label;
     }
 
     private static JLabel keyCell(String text) {
         JLabel label = new JLabel(text, SwingConstants.CENTER);
-        label.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
+        label.setFont(new Font(MenuStyles.CONTROL_FONT, Font.BOLD, 16));
         label.setForeground(new Color(0x222222));
         label.setBackground(new Color(0xEEEEEE));
         label.setOpaque(true);

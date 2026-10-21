@@ -12,6 +12,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 final class MenuStyles {
+    static final String TITLE_FONT = "Segoe UI Black";
+    static final String HEADING_FONT = "Impact";
+    static final String CONTROL_FONT = "Bahnschrift";
+
     static final Color PRIMARY_TEXT = new Color(0xBBBBBB);
     static final Color SECONDARY_TEXT = Color.WHITE;
 
@@ -49,7 +53,7 @@ final class MenuStyles {
     static JButton button(String text, boolean bold) {
         JButton button = new JButton(text);
         button.setFont(new Font(
-                Font.SANS_SERIF,
+                CONTROL_FONT,
                 bold ? Font.BOLD : Font.PLAIN, 20));
         button.setFocusable(false);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);

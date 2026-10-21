@@ -3,5 +3,6 @@ package game;
 public enum Panels {
     TITLE_SCREEN,
     PLAY_SCREEN,
-    CONTROLS_PAGE
+    CONTROLS_PAGE,
+    ABOUT_PAGE
 }

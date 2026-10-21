@@ -31,7 +31,8 @@ public class PlayScreen extends MenuBackground {
         JPanel content = MenuStyles.verticalPanel();
 
         content.add(MenuStyles.label(
-                "Select an arena",
+                "Select an arena:",
+                MenuStyles.HEADING_FONT,
                 42,
                 Font.BOLD,
                 MenuStyles.PRIMARY_TEXT));
@@ -39,7 +40,7 @@ public class PlayScreen extends MenuBackground {
         MenuStyles.gap(content, 30);
 
         JComboBox<String> arenaChooser = new JComboBox<>(ARENAS);
-        arenaChooser.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
+        arenaChooser.setFont(new Font(MenuStyles.CONTROL_FONT, Font.PLAIN, 16));
         arenaChooser.setAlignmentX(CENTER_ALIGNMENT);
 
         Dimension chooserSize = new Dimension(360, 44);
