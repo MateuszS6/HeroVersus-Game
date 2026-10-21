@@ -15,6 +15,12 @@ public class MenuBackground extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(background, 0, 0, null);
+        g.drawImage(
+                background,
+                0,
+                0,
+                getWidth(),
+                getHeight(),
+                this);
     }
 }

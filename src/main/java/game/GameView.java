@@ -1,11 +1,15 @@
 package game;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import arenas.BattleArena;
 import city.cs.engine.DebugViewer;
 import city.cs.engine.UserView;
 import player.PlayerController;
-
-import java.awt.*;
 
 /** Game view class. */
 public class GameView extends UserView {
@@ -13,11 +17,13 @@ public class GameView extends UserView {
     private final BattleArena arena;
     private DebugViewer debugViewer;
 
-    /** View constructor.
+    /**
+     * View constructor.
      * <p>
      * Creates a new view to look onto the BattleArena.
-     * @param w the arena
-     * @param width the width of the view in pixels
+     * 
+     * @param w      the arena
+     * @param width  the width of the view in pixels
      * @param height the height of the view in pixels
      */
     public GameView(BattleArena w, int width, int height) {
@@ -27,7 +33,15 @@ public class GameView extends UserView {
         addKeyListener(new PlayerController(arena.getPlayer1())); // Player 1 controller
         addKeyListener(new PlayerController(arena.getPlayer2())); // Player 2 controller
 
-        addMouseListener(new GiveFocus(this)); // View focus
+        setFocusable(true);
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                requestFocusInWindow();
+            }
+        });
+
         addKeyListener(new GameController(this, arena, 2)); // Debug controller
     }
 
@@ -36,19 +50,20 @@ public class GameView extends UserView {
         if (arena.getBgImage() == null) {
             g.setColor(arena.getBgColour());
             g.fillRect(0, 0, getWidth(), getHeight());
-        } else g.drawImage(arena.getBgImage(), 0, 0, this);
+        } else
+            g.drawImage(arena.getBgImage(), 0, 0, this);
     }
 
     @Override
     protected void paintForeground(Graphics2D g) {
         arena.drawHUD(this, g);
-        if (arena.isPaused() || arena.isEnded()) drawPauseMenu(g);
+        if (arena.isPaused() || arena.isEnded())
+            drawPauseMenu(g);
     }
 
-
-
     public void runDebugViewer() {
-        if (debugViewer == null) debugViewer = new DebugViewer(arena, getWidth(), getHeight());
+        if (debugViewer == null)
+            debugViewer = new DebugViewer(arena, getWidth(), getHeight());
     }
 
     public void drawPauseMenu(Graphics2D g) {

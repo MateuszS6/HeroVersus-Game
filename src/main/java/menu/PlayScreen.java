@@ -1,42 +1,84 @@
 package menu;
 
-import arenas.*;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagLayout;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+
+import arenas.BattleArena;
+import arenas.OldHangar;
+import arenas.RoyalArena;
+import arenas.TheVoid;
+import arenas.WildForest;
 import game.Game;
 import game.Panels;
 
-import javax.swing.*;
-import java.awt.*;
+public class PlayScreen extends MenuBackground {
+    private static final String[] ARENAS = {
+            "Select an arena...",
+            "ROYAL ARENA",
+            "WILD FOREST",
+            "THE VOID",
+            "OLD HANGAR"
+    };
 
-public class PlayScreen {
-    private final Game game;
-    private JPanel mainPanel;
-    private JComboBox<String> comboBox;
-    private BattleArena selection;
-    private JButton fightButton;
-    private JButton backButton;
+    public PlayScreen(Game game) {
+        setLayout(new GridBagLayout());
 
-    public PlayScreen(Game g) {
-        game = g;
-        comboBox.addActionListener(e -> {
-            selection = switch (comboBox.getSelectedIndex()) {
-                case 1 -> new RoyalArena(game);
-                case 2 -> new WildForest(game);
-                case 3 -> new TheVoid(game);
-                case 4 -> new OldHangar(game);
-                default -> null;
-            };
+        JPanel content = MenuStyles.verticalPanel();
+
+        content.add(MenuStyles.label(
+                "Select an arena",
+                42,
+                Font.BOLD,
+                MenuStyles.PRIMARY_TEXT));
+
+        MenuStyles.gap(content, 30);
+
+        JComboBox<String> arenaChooser = new JComboBox<>(ARENAS);
+        arenaChooser.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
+        arenaChooser.setAlignmentX(CENTER_ALIGNMENT);
+
+        Dimension chooserSize = new Dimension(360, 44);
+        arenaChooser.setPreferredSize(chooserSize);
+        arenaChooser.setMaximumSize(chooserSize);
+
+        JButton fightButton = MenuStyles.button("Fight!", true);
+        JButton backButton = MenuStyles.button("Back", false);
+
+        fightButton.setEnabled(false);
+
+        arenaChooser.addActionListener(_ -> fightButton.setEnabled(
+                arenaChooser.getSelectedIndex() > 0));
+
+        fightButton.addActionListener(_ -> {
+            BattleArena arena = createArena(game, arenaChooser.getSelectedIndex());
+
+            if (arena != null)
+                game.goToArena(arena);
         });
-        fightButton.addActionListener(e -> {
-            if (selection != null) game.goToArena(selection);
-        });
-        backButton.addActionListener(e -> game.switchToMenu(Panels.TITLE_SCREEN));
+
+        backButton.addActionListener(_ -> game.switchToMenu(Panels.TITLE_SCREEN));
+
+        content.add(arenaChooser);
+        MenuStyles.gap(content, 18);
+        content.add(fightButton);
+        MenuStyles.gap(content, 12);
+        content.add(backButton);
+
+        add(content);
     }
 
-    public JPanel getMainPanel() {
-        return mainPanel;
-    }
-
-    private void createUIComponents() {
-        mainPanel = new MenuBackground();
+    private static BattleArena createArena(Game game, int selection) {
+        return switch (selection) {
+            case 1 -> new RoyalArena(game);
+            case 2 -> new WildForest(game);
+            case 3 -> new TheVoid(game);
+            case 4 -> new OldHangar(game);
+            default -> null;
+        };
     }
 }
