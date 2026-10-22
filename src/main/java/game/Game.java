@@ -1,16 +1,15 @@
 package game;
 
 import java.awt.Dimension;
-import java.io.IOException;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import arenas.BattleArena;
-import city.cs.engine.SoundClip;
+import audio.MusicPlayer;
 import menu.AboutPage;
 import menu.ControlsPage;
 import menu.PlayScreen;
@@ -23,8 +22,7 @@ public final class Game {
 	public static final int HEIGHT = 600;
 	private final JFrame window;
 	private JPanel screen;
-	private SoundClip soundtrack;
-	private String soundtrackFileName;
+	private final MusicPlayer music = new MusicPlayer();
 	private BattleArena arena;
 
 	/**
@@ -33,17 +31,26 @@ public final class Game {
 	 * Creates a new game with the title screen and soundtrack.
 	 */
 	public Game() {
-		// TODO: 30/04/2023 Main menu book-style as imagined
-
 		window = new JFrame("HeroVersus");
 
 		screen = new TitleScreen(this);
-		// Window would have to be [816x639] to ensure the correct GameView size
-		// [800x600]
+		// Window would have to be [816x639] to ensure the correct GameView size [800x600]
 		screen.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-
 		window.setContentPane(screen); // Add the component to the window
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		window.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent event) {
+				try {
+					close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
 		window.setResizable(false);
 		window.pack(); // Resize the window to fit the preferred size
 		window.setLocationRelativeTo(null);
@@ -57,39 +64,13 @@ public final class Game {
 	}
 
 	public void setSoundtrack(String fileName) {
-		if (soundtrack != null && fileName.equals(soundtrackFileName))
-			return;
-
-		try {
-			SoundClip nextSoundtrack = new SoundClip(
-					Resources.url("assets/sound/music/" + fileName));
-
-			nextSoundtrack.setVolume(0.3);
-
-			if (soundtrack != null)
-				soundtrack.stop();
-
-			soundtrack = nextSoundtrack;
-			soundtrackFileName = fileName;
-			soundtrack.loop();
-		} catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-			throw new RuntimeException(e);
-		}
+		music.play(fileName);
+		music.setPaused(false);
 	}
 
 	public void toggleSoundtrack() {
-		if (arena.isPaused())
-			soundtrack.pause();
-		else
-			soundtrack.resume();
-	}
-
-	public void playSound(String fileName) {
-		try {
-			new SoundClip(Resources.url("assets/sound/" + fileName)).play();
-		} catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-			throw new RuntimeException(e);
-		}
+		if (arena != null)
+			music.setPaused(arena.isPaused());
 	}
 
 	public void switchToMenu(Panels panel) throws Exception {
@@ -149,4 +130,10 @@ public final class Game {
 	// view.repaint();
 	// arena.start();
 	// }
+
+	public void close() throws Exception {
+		closeArena();
+		music.close();
+		window.dispose();
+	}
 }

@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import game.Game;
 import game.Panels;
 
+// TODO 30/04/2023: Main menu book-style as imagined
+
 public class TitleScreen extends MenuBackground {
     public TitleScreen(Game game) {
         setLayout(new GridBagLayout());
@@ -60,7 +62,14 @@ public class TitleScreen extends MenuBackground {
                 e.printStackTrace();
             }
         });
-        quitButton.addActionListener(_ -> System.exit(0));
+        quitButton.addActionListener(_ -> {
+            try {
+                game.close();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
 
         content.add(playButton);
         MenuStyles.gap(content, 12);
