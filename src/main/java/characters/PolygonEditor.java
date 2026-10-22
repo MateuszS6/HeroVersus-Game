@@ -20,6 +20,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import game.Resources;
 
@@ -163,9 +164,12 @@ public class PolygonEditor extends JPanel {
             }
 
             public void mouseReleased(MouseEvent e) {
-                String mods = MouseEvent.getMouseModifiersText(e.getModifiers());
-                if (!mods.equals("Button1"))
+                if (!SwingUtilities.isLeftMouseButton(e)
+                        && currentVertex >= 0
+                        && currentVertex < points.size()) {
                     points.remove(currentVertex);
+                }
+
                 currentVertex = -1;
                 updateView();
             }

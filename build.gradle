@@ -13,7 +13,9 @@ java {
 
 dependencies {
     implementation files('lib/CityEngine.jar')
-    runtimeOnly 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
+    runtimeOnly('com.googlecode.soundlibs:mp3spi:1.9.5.4') {
+        exclude group: 'junit', module: 'junit'
+    }
 }
 
 application {
