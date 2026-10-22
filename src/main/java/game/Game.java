@@ -59,6 +59,12 @@ public final class Game {
 		SwingUtilities.invokeLater(Game::new);
 	}
 
+	public void close() {
+		closeArena();
+		music.close();
+		window.dispose();
+	}
+
 	public void setSoundtrack(String fileName) {
 		music.play(fileName);
 		music.setPaused(false);
@@ -85,12 +91,6 @@ public final class Game {
 		window.revalidate();
 		window.repaint();
 		setSoundtrack(MENU_MUSIC);
-	}
-
-	public void close() {
-		closeArena();
-		music.close();
-		window.dispose();
 	}
 
 	public void goToArena(BattleArena a) {
@@ -124,12 +124,4 @@ public final class Game {
 			arena = null;
 		}
 	}
-
-	// private void restartArena(BattleArena w) {
-	// arena = w;
-	// view = new GameView(arena, WIDTH, HEIGHT);
-	// switchPanel(view);
-	// view.repaint();
-	// arena.start();
-	// }
 }

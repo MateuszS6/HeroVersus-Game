@@ -12,53 +12,53 @@ import game.Panels;
 // TODO 30/04/2023: Main menu book-style as imagined
 
 public class TitleScreen extends MenuBackground {
-    public TitleScreen(Game game) {
-        setLayout(new GridBagLayout());
+	public TitleScreen(Game game) {
+		setLayout(new GridBagLayout());
 
-        JPanel content = MenuStyles.verticalPanel();
+		JPanel content = MenuStyles.verticalPanel();
 
-        content.add(MenuStyles.label(
-                "HeroVersus",
-                MenuStyles.TITLE_FONT,
-                72,
-                Font.BOLD | Font.ITALIC,
-                MenuStyles.PRIMARY_TEXT));
+		content.add(MenuStyles.label(
+				"HeroVersus",
+				MenuStyles.TITLE_FONT,
+				72,
+				Font.BOLD | Font.ITALIC,
+				MenuStyles.PRIMARY_TEXT));
 
-        content.add(MenuStyles.label(
-                "BATTLE ARENA",
-                MenuStyles.HEADING_FONT,
-                42,
-                Font.BOLD,
-                MenuStyles.SECONDARY_TEXT));
+		content.add(MenuStyles.label(
+				"BATTLE ARENA",
+				MenuStyles.HEADING_FONT,
+				42,
+				Font.BOLD,
+				MenuStyles.SECONDARY_TEXT));
 
-        MenuStyles.gap(content, 50);
+		MenuStyles.gap(content, 50);
 
-        JButton playButton = MenuStyles.button("Play", true);
-        JButton controlsButton = MenuStyles.button("Controls", false);
-        JButton aboutButton = MenuStyles.button("About", false);
-        JButton quitButton = MenuStyles.button("Quit", false);
+		JButton playButton = MenuStyles.button("Play", true);
+		JButton controlsButton = MenuStyles.button("Controls", false);
+		JButton aboutButton = MenuStyles.button("About", false);
+		JButton quitButton = MenuStyles.button("Quit", false);
 
-        playButton.addActionListener(_ -> {
-            game.switchToMenu(Panels.PLAY_SCREEN);
-        });
-        controlsButton.addActionListener(_ -> {
-            game.switchToMenu(Panels.CONTROLS_PAGE);
-        });
-        aboutButton.addActionListener(_ -> {
-            game.switchToMenu(Panels.ABOUT_PAGE);
-        });
-        quitButton.addActionListener(_ -> {
-            game.close();
-        });
+		playButton.addActionListener(_ -> {
+			game.switchToMenu(Panels.PLAY_SCREEN);
+		});
+		controlsButton.addActionListener(_ -> {
+			game.switchToMenu(Panels.CONTROLS_PAGE);
+		});
+		aboutButton.addActionListener(_ -> {
+			game.switchToMenu(Panels.ABOUT_PAGE);
+		});
+		quitButton.addActionListener(_ -> {
+			game.close();
+		});
 
-        content.add(playButton);
-        MenuStyles.gap(content, 12);
-        content.add(controlsButton);
-        MenuStyles.gap(content, 12);
-        content.add(aboutButton);
-        MenuStyles.gap(content, 12);
-        content.add(quitButton);
+		content.add(playButton);
+		MenuStyles.gap(content, 12);
+		content.add(controlsButton);
+		MenuStyles.gap(content, 12);
+		content.add(aboutButton);
+		MenuStyles.gap(content, 12);
+		content.add(quitButton);
 
-        add(content);
-    }
+		add(content);
+	}
 }

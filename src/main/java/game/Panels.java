@@ -1,8 +1,8 @@
 package game;
 
 public enum Panels {
-    TITLE_SCREEN,
-    PLAY_SCREEN,
-    CONTROLS_PAGE,
-    ABOUT_PAGE
+	TITLE_SCREEN,
+	PLAY_SCREEN,
+	CONTROLS_PAGE,
+	ABOUT_PAGE
 }

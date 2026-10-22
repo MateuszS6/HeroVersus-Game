@@ -1,7 +1,7 @@
 package player;
 
 public enum Characters {
-    KNIGHT,
-    SKELETON,
-    WIZARD
+	KNIGHT,
+	SKELETON,
+	WIZARD
 }
