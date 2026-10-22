@@ -1,16 +1,10 @@
 # HeroVersus: Battle Arena
 
-Welcome to **HeroVersus: Battle Arena**, a dynamic 2-player 2D fighting game developed as part of the IN1007 Programming in Java module at City, University of London. This project showcases a combination of object-oriented programming techniques and game development strategies using Java.
+A local two-player 2D fighting game, originally developed for the IN1007 Programming in Java module at City, University of London, in Spring 2023.
 
-**HeroVersus: Battle Arena** pits two players against each other in a competitive fighting match set in various unique arenas. Each character boasts distinct abilities and moves, enhancing the strategic depth and replayability of the game.
+The project now uses Java 25, Gradle, and plain Swing menus.
 
-## Coursework Details
-
-- **Course**: IN1007 Programming in Java
-- **Institution**: City, University of London
-- **Term**: Spring 2023
-
-> **Note**: This repository was originally created under @cityteaching and has been cloned here for public visibility.
+The game pits two players against each other in a competitive fighting match set in unique arenas and environments. Each character boasts distinct abilities and moves, enhancing the strategic depth and replayability of the game.
 
 ## Features
 
@@ -58,23 +52,83 @@ Here, the game is shown paused in the mysterious void level. The pause menu offe
 
 Another example of combat, this time set in the hangar level, showcasing the uniqueness of this environment. The screenshot highlights the dynamic and interactive gameplay elements that differ with each level.
 
+## Requirements
+
+- JDK 25.
+- The original course-provided `CityEngine.jar`.
+- Optional: VS Code with the Extension Pack for Java.
+
+Gradle is provided through the wrapper. MP3 dependencies are downloaded
+automatically on the first build.
+
 ## Getting Started
 
-To run **HeroVersus: Battle Arena** on your local machine, follow these steps:
+Clone the repository:
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/HeroVersus-BattleArena.git
-   ```
-2. Navigate to the cloned directory:
-   ```bash
-   cd HeroVersus-BattleArena
-   ```
-3. Compile the Java files (ensure you have JDK installed):
-   ```bash
-   javac *.java
-   ```
-4. Run the game:
-   ```bash
-   java game.Game
-   ```
+```powershell
+git clone https://github.com/mateuszs6/HeroVersusGame.git HeroVersus-Game cd HeroVersus-Game
+```
+
+Copy the original `CityEngine.jar` into the `lib` directory:
+
+```text
+lib/CityEngine.jar
+```
+
+The engine is not included in the repository. It already contains JBox2D; no separate JBox2D installation is needed.
+
+Run the game from the project root:
+
+```powershell
+.\gradlew.bat run
+```
+
+In VS Code, open the project folder and allow the Java extensions to import
+the Gradle project.
+
+## Controls
+
+| Action | Player 1 | Player 2 |
+|---|---|---|
+| Jump | W | Up arrow |
+| Move left | A | Left arrow |
+| Move right | D | Right arrow |
+| Attack | R | Period (`.`) |
+
+- **Esc:** pause or resume.
+- **Enter:** return to the menu while paused or after a match.
+
+Players currently use fixed characters: Knight and Wizard.
+
+## Build
+
+Compile and package the game:
+
+```powershell
+.\gradlew.bat clean build
+```
+
+Create a local installation containing the game and its dependencies:
+
+```powershell
+.\gradlew.bat installDist
+```
+
+Launch that installation:
+
+```powershell
+.\build\install\HeroVersusGame\bin\HeroVersusGame.bat
+```
+
+## Project layout
+
+```text
+src/main/java/               Game code and developer tools
+src/main/resources/assets/   Runtime images, animations, and music
+art/                        Source artwork and unused asset variants
+lib/                        Local CityEngine library
+docs/screenshots/           Gameplay screenshots
+```
+
+The game uses CityEngine's JBox2D-based physics, Swing for its interface,
+and Java Sound with MP3SPI for music playback.
