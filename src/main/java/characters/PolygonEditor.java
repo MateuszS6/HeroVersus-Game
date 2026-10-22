@@ -87,7 +87,7 @@ public class PolygonEditor extends JPanel {
 
     private ImageIcon icon;
     /** height of the icon in the world (in metres) */
-    private float boxHeight;
+    // private float boxHeight;
     private int powerOf10;
 
     private double canvasWidth;
@@ -119,7 +119,7 @@ public class PolygonEditor extends JPanel {
      */
     private PolygonEditor(String f, float boxHeight) {
         super();
-        this.boxHeight = boxHeight;
+        // this.boxHeight = boxHeight;
         System.out.println("height = " + boxHeight);
         powerOf10 = 1;
         while (powerOf10 * boxHeight < 300)
@@ -282,8 +282,9 @@ public class PolygonEditor extends JPanel {
      * @param args command line arguments.
      */
     public static void main(String[] args) {
-        String knight = "assets/character/FreeKnight/Colour1/NoOutline/120x80_gifs/left_idle.gif";
-        String skeleton = "assets/character/Skeleton/120x80_gifs/right_attack2.gif";
+        // String knight =
+        // "assets/character/FreeKnight/Colour1/NoOutline/120x80_gifs/left_idle.gif";
+        // String skeleton = "assets/character/Skeleton/120x80_gifs/right_attack2.gif";
         String wizard = "assets/character/Wizard/gif/r_attack.gif";
         String fileName = wizard;
         float boxHeight = 9;

@@ -51,12 +51,7 @@ public class GameController implements KeyListener {
                 if (key == KeyEvent.VK_ESCAPE)
                     System.out.println("Feature unavailable.");
             if (key == KeyEvent.VK_ENTER)
-                try {
-                    arena.exit();
-                } catch (Exception e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
+                arena.exit();
         }
     }
 

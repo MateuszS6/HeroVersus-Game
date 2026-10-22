@@ -60,12 +60,7 @@ public class ControlsPage extends MenuBackground {
 
         JButton backButton = MenuStyles.button("Back", false);
         backButton.addActionListener(_ -> {
-            try {
-                game.switchToMenu(Panels.TITLE_SCREEN);
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            game.switchToMenu(Panels.TITLE_SCREEN);
         });
 
         content.add(backButton);

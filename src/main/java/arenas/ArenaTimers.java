@@ -40,7 +40,7 @@ public final class ArenaTimers implements StepListener, AutoCloseable {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		if (!closed) {
 			closed = true;
 			tasks.clear();

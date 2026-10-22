@@ -212,12 +212,12 @@ public abstract class BattleArena extends World implements AutoCloseable {
     // game.restartArena(w);
     // }
 
-    public void exit() throws Exception {
+    public void exit() {
         game.switchToMenu(Panels.TITLE_SCREEN);
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         if (!closed) {
             closed = true;
             stop();

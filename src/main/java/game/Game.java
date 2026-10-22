@@ -34,7 +34,8 @@ public final class Game {
 		window = new JFrame("HeroVersus");
 
 		screen = new TitleScreen(this);
-		// Window would have to be [816x639] to ensure the correct GameView size [800x600]
+		// Window would have to be [816x639] to ensure the correct GameView size
+		// [800x600]
 		screen.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		window.setContentPane(screen); // Add the component to the window
 
@@ -42,12 +43,7 @@ public final class Game {
 		window.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent event) {
-				try {
-					close();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				close();
 			}
 		});
 
@@ -73,7 +69,7 @@ public final class Game {
 			music.setPaused(arena.isPaused());
 	}
 
-	public void switchToMenu(Panels panel) throws Exception {
+	public void switchToMenu(Panels panel) {
 		closeArena();
 
 		screen = switch (panel) {
@@ -91,7 +87,13 @@ public final class Game {
 		setSoundtrack(MENU_MUSIC);
 	}
 
-	public void goToArena(BattleArena a) throws Exception {
+	public void close() {
+		closeArena();
+		music.close();
+		window.dispose();
+	}
+
+	public void goToArena(BattleArena a) {
 		a.initialise();
 		closeArena();
 
@@ -113,7 +115,7 @@ public final class Game {
 		SwingUtilities.invokeLater(view::requestFocusInWindow);
 	}
 
-	public void closeArena() throws Exception {
+	private void closeArena() {
 		if (screen instanceof GameView view)
 			view.close();
 
@@ -123,17 +125,11 @@ public final class Game {
 		}
 	}
 
-	// public void restartArena(BattleArena w) {
+	// private void restartArena(BattleArena w) {
 	// arena = w;
 	// view = new GameView(arena, WIDTH, HEIGHT);
 	// switchPanel(view);
 	// view.repaint();
 	// arena.start();
 	// }
-
-	public void close() throws Exception {
-		closeArena();
-		music.close();
-		window.dispose();
-	}
 }
