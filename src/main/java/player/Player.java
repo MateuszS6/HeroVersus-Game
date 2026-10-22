@@ -1,48 +1,54 @@
 package player;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+
+import org.jbox2d.common.Vec2;
+
+import arenas.ArenaTimers;
+import arenas.BattleArena;
 import characters.Character;
 import characters.Knight;
 import characters.Skeleton;
 import characters.Wizard;
-import city.cs.engine.*;
-import arenas.BattleArena;
-import org.jbox2d.common.Vec2;
+import city.cs.engine.SolidFixture;
+import city.cs.engine.Walker;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-public class Player extends Walker implements ActionListener {
+public class Player extends Walker {
     public static final int MAX_HEALTH = 100;
     public static final int MAX_RESPAWNS = 3;
+
+    private ArenaTimers.Task attackTimer;
+
     private final BattleArena gameRound;
     private final int ID;
     private final Character character;
     private final Vec2 startPos;
     private KeyBindings keyBindings;
     private SolidFixture hitbox;
-    private int
-            health,
+    private int health,
             respawns;
-    private boolean
-            isFacingRight,
+    private boolean isFacingRight,
             isMidAir,
             isRunning,
             isAttacking;
 
-    /** Player constructor.
+    /**
+     * Player constructor.
      * <p>
      * Creates and spawns new player in the arena.
-     * @param w the arena in which the player should spawn
+     * 
+     * @param w      the arena in which the player should spawn
      * @param number the ID of the player (either 1 or 2)
-     * @param c a character enum to bind the corresponding character object to the player
-     * @param spawn the spawn location for the player in the world
+     * @param c      a character enum to bind the corresponding character object to
+     *               the player
+     * @param spawn  the spawn location for the player in the world
      */
     public Player(BattleArena w,
-                  int number,
-                  Characters c,
-                  Vec2 spawn) {
+            int number,
+            Characters c,
+            Vec2 spawn) {
         super(w);
         gameRound = w;
         ID = number;
@@ -108,13 +114,24 @@ public class Player extends Walker implements ActionListener {
         return isAttacking;
     }
 
+    public boolean canAcceptInput() {
+        return respawns > 0
+                && gameRound.isRunning()
+                && !gameRound.isEnded();
+    }
+
     public void idle() {
         stopWalking();
         isRunning = false;
 
+        if (isAttacking)
+            return;
+
         removeAllImages();
-        if (isMidAir) addImage(character.getJumpImage());
-        else addImage(character.getIdleImage());
+        if (isMidAir)
+            addImage(character.getJumpImage());
+        else
+            addImage(character.getIdleImage());
     }
 
     public void jump() {
@@ -131,8 +148,10 @@ public class Player extends Walker implements ActionListener {
         isMidAir = false;
 
         removeAllImages();
-        if (isRunning) addImage(character.getRunImage());
-        else addImage(character.getIdleImage());
+        if (isRunning)
+            addImage(character.getRunImage());
+        else
+            addImage(character.getIdleImage());
     }
 
     public void run(int direction) {
@@ -140,33 +159,37 @@ public class Player extends Walker implements ActionListener {
             startWalking(character.getRunSpeed() * direction);
             isRunning = true;
 
-            if (direction == 1) isFacingRight = true;
-            else if (direction == -1) isFacingRight = false;
-            else throw new RuntimeException("Invalid direction chosen.");
+            if (direction == 1)
+                isFacingRight = true;
+            else if (direction == -1)
+                isFacingRight = false;
+            else
+                throw new RuntimeException("Invalid direction chosen.");
 
             removeAllImages();
-            if (isMidAir) addImage(character.getJumpImage());
-            else addImage(character.getRunImage());
+            if (isMidAir)
+                addImage(character.getJumpImage());
+            else
+                addImage(character.getRunImage());
         }
     }
 
     public void attack() {
-        if (isRunning) idle();
-        if (!isMidAir && !isAttacking) {
-            isAttacking = true;
+        if (!canAcceptInput() || isMidAir || isAttacking)
+            return;
 
-            Timer timer = new Timer(character.getAttackDuration(), this);
-            timer.setRepeats(false);
-            timer.start();
+        if (isRunning)
+            idle();
 
-            updateHitboxAndImage();
-        }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        isAttacking = false;
+        isAttacking = true;
         updateHitboxAndImage();
+
+        attackTimer = gameRound.getTimers().after(
+                character.getAttackDuration(), () -> {
+                    attackTimer = null;
+                    isAttacking = false;
+                    updateHitboxAndImage();
+                });
     }
 
     public void updateHitboxAndImage() {
@@ -187,22 +210,37 @@ public class Player extends Walker implements ActionListener {
     }
 
     public void respawn() {
-        if (respawns < 2 && health < 1) {
+        if (health > 0 || respawns == 0 || gameRound.isEnded())
+            return;
+
+        if (attackTimer != null) {
+            attackTimer.cancel();
+            attackTimer = null;
+        }
+
+        isAttacking = false;
+        isRunning = false;
+        isMidAir = false;
+        stopWalking();
+
+        if (respawns < 2) {
             respawns = 0;
             destroy();
             System.out.println("Player " + ID + " is defeated.");
             gameRound.setWinner(ID == 1 ? 2 : 1);
             gameRound.togglePause(true);
-        } else if (health < 1) {
-            isFacingRight = ID == 1;
-            setPosition(startPos);
-
-            health = MAX_HEALTH;
-            respawns--;
+            return;
         }
+
+        health = MAX_HEALTH;
+        respawns--;
+        isFacingRight = ID == 1;
+        setLinearVelocity(new Vec2(0, 0));
+        setPosition(startPos);
+        updateHitboxAndImage();
     }
 
-    // TODO: 28/04/2023 Changeable player username
+    // TODO 28/04/2023: Changeable player username
     public void drawStats(Graphics2D g, int w, int h, int x, int y) {
         // Save colour and font
         Color savedColour = g.getColor();

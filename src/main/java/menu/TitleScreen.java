@@ -36,9 +36,30 @@ public class TitleScreen extends MenuBackground {
         JButton aboutButton = MenuStyles.button("About", false);
         JButton quitButton = MenuStyles.button("Quit", false);
 
-        playButton.addActionListener(_ -> game.switchToMenu(Panels.PLAY_SCREEN));
-        controlsButton.addActionListener(_ -> game.switchToMenu(Panels.CONTROLS_PAGE));
-        aboutButton.addActionListener(_ -> game.switchToMenu(Panels.ABOUT_PAGE));
+        playButton.addActionListener(_ -> {
+            try {
+                game.switchToMenu(Panels.PLAY_SCREEN);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
+        controlsButton.addActionListener(_ -> {
+            try {
+                game.switchToMenu(Panels.CONTROLS_PAGE);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
+        aboutButton.addActionListener(_ -> {
+            try {
+                game.switchToMenu(Panels.ABOUT_PAGE);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
         quitButton.addActionListener(_ -> System.exit(0));
 
         content.add(playButton);

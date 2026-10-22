@@ -1,32 +1,41 @@
 package world;
 
-import city.cs.engine.*;
-import arenas.BattleArena;
 import org.jbox2d.common.Vec2;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import arenas.ArenaTimers;
+import arenas.BattleArena;
+import city.cs.engine.CircleShape;
+import city.cs.engine.DynamicBody;
 
-public class HoveringBall extends DynamicBody implements ActionListener {
-    public HoveringBall(BattleArena w, float radius, float x, float y) {
-        super(w, new CircleShape(radius, x, y));
+public class HoveringBall extends DynamicBody {
+    private final BattleArena arena;
+    private ArenaTimers.Task hoverTimer;
+
+    public HoveringBall(BattleArena arena, float radius, float x, float y) {
+        super(arena, new CircleShape(radius, x, y));
+        this.arena = arena;
         setGravityScale(0);
-        SolidFixture surface = new SolidFixture(this, new CircleShape(radius, x, y));
+        // SolidFixture surface = new SolidFixture(this, new CircleShape(radius, x, y));
         // surface.setRestitution(1);
 
         hover();
     }
 
     public void hover() {
-        Timer timer = new Timer(1000, this);
-        // timer.setInitialDelay(5000);
-        timer.start();
+        if (hoverTimer != null)
+            hoverTimer.cancel();
+
         setLinearVelocity(new Vec2(0, -0.5f));
+
+        hoverTimer = arena.getTimers().every(1_000,
+                () -> setLinearVelocity(new Vec2(0, -getLinearVelocity().y)));
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        setLinearVelocity(new Vec2(0, -getLinearVelocity().y));
+    public void destroy() {
+        if (hoverTimer != null)
+            hoverTimer.cancel();
+
+        super.destroy();
     }
 }

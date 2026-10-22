@@ -1,35 +1,31 @@
 package world;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import arenas.BattleArena;
 import city.cs.engine.CollisionEvent;
 import city.cs.engine.CollisionListener;
-import arenas.BattleArena;
 import player.Player;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+public class DeathZone extends Barrier implements CollisionListener {
+    private final BattleArena arena;
+    private final Set<Player> coolingDown = new HashSet<>();
 
-public class DeathZone extends Barrier implements CollisionListener, ActionListener {
-    public DeathZone(BattleArena w, float halfWidth, float y) {
-        super(w, halfWidth, 0.5f, 0, y);
+    public DeathZone(BattleArena arena, float halfWidth, float y) {
+        super(arena, halfWidth, 0.5f, 0, y);
+        this.arena = arena;
         addCollisionListener(this);
     }
 
     @Override
-    public void collide(CollisionEvent e) {
-        if (e.getOtherBody() instanceof Player player) {
-            removeAllCollisionListeners();
+    public void collide(CollisionEvent event) {
+        if (event.getOtherBody() instanceof Player player
+                && player.canAcceptInput()
+                && coolingDown.add(player)) {
             player.setHealth(0);
             player.respawn();
-
-            Timer timer = new Timer(500, this);
-            timer.setRepeats(false);
-            timer.start();
+            arena.getTimers().after(500, () -> coolingDown.remove(player));
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        addCollisionListener(this);
     }
 }

@@ -45,22 +45,6 @@ public class GameView extends UserView {
         addKeyListener(new GameController(this, arena, 2)); // Debug controller
     }
 
-    @Override
-    protected void paintBackground(Graphics2D g) {
-        if (arena.getBgImage() == null) {
-            g.setColor(arena.getBgColour());
-            g.fillRect(0, 0, getWidth(), getHeight());
-        } else
-            g.drawImage(arena.getBgImage(), 0, 0, this);
-    }
-
-    @Override
-    protected void paintForeground(Graphics2D g) {
-        arena.drawHUD(this, g);
-        if (arena.isPaused() || arena.isEnded())
-            drawPauseMenu(g);
-    }
-
     public void runDebugViewer() {
         if (debugViewer == null)
             debugViewer = new DebugViewer(arena, getWidth(), getHeight());
@@ -98,5 +82,28 @@ public class GameView extends UserView {
         int fCentre = g.getFontMetrics().stringWidth(text) / 2;
         int fMiddle = g.getFontMetrics().getHeight() / 2;
         g.drawString(text, x - fCentre, y - fMiddle);
+    }
+
+    public void close() {
+        if (debugViewer != null) {
+            debugViewer.dispose();
+            debugViewer = null;
+        }
+    }
+
+    @Override
+    protected void paintBackground(Graphics2D g) {
+        if (arena.getBgImage() == null) {
+            g.setColor(arena.getBgColour());
+            g.fillRect(0, 0, getWidth(), getHeight());
+        } else
+            g.drawImage(arena.getBgImage(), 0, 0, this);
+    }
+
+    @Override
+    protected void paintForeground(Graphics2D g) {
+        arena.drawHUD(this, g);
+        if (arena.isPaused() || arena.isEnded())
+            drawPauseMenu(g);
     }
 }

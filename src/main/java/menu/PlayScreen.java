@@ -59,10 +59,22 @@ public class PlayScreen extends MenuBackground {
             BattleArena arena = createArena(game, arenaChooser.getSelectedIndex());
 
             if (arena != null)
-                game.goToArena(arena);
+                try {
+                    game.goToArena(arena);
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
         });
 
-        backButton.addActionListener(_ -> game.switchToMenu(Panels.TITLE_SCREEN));
+        backButton.addActionListener(_ -> {
+            try {
+                game.switchToMenu(Panels.TITLE_SCREEN);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
 
         content.add(arenaChooser);
         MenuStyles.gap(content, 18);

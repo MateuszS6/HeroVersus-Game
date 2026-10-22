@@ -1,17 +1,15 @@
 package arenas;
 
-import game.Game;
+import java.awt.Color;
+
 import org.jbox2d.common.Vec2;
+
+import game.Game;
 import world.HealthRefill;
 import world.Platform;
 import world.Tile;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-public class RoyalArena extends BattleArena implements ActionListener {
+public class RoyalArena extends BattleArena {
     public RoyalArena(Game g) {
         super(g,
                 "ROYAL ARENA",
@@ -30,17 +28,9 @@ public class RoyalArena extends BattleArena implements ActionListener {
         stage.setLineColor(transparent);
 
         // Hovering ball
-//        HoveringBall annoyingBall = new HoveringBall(this, 3, 0, 8);
+        // HoveringBall annoyingBall = new HoveringBall(this, 3, 0, 8);
 
-        Timer collectibleTimer = new Timer(10000, this);
-        collectibleTimer.setRepeats(false);
-        collectibleTimer.start();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // Collectible
-        new HealthRefill(this, 0, 10);
+        getTimers().after(10_000, () -> new HealthRefill(this, 0, 10));
     }
 
     @Override
@@ -60,10 +50,12 @@ public class RoyalArena extends BattleArena implements ActionListener {
         placeBlock(Tile.ROW, 1, -2);
         placeBlock(Tile.ROW_RIGHT, 3, -2);
 
-        for (int x = -19; x < -12; x += 2) placeBlock(Tile.ROW, x, 3);
+        for (int x = -19; x < -12; x += 2)
+            placeBlock(Tile.ROW, x, 3);
         placeBlock(Tile.ROW_RIGHT, -11, 3);
         placeBlock(Tile.ROW_LEFT, 11, 3);
-        for (int x = 13; x < 20; x += 2) placeBlock(Tile.ROW, x, 3);
+        for (int x = 13; x < 20; x += 2)
+            placeBlock(Tile.ROW, x, 3);
 
         placeBlock(Tile.ROW_LEFT, -3, 8);
         placeBlock(Tile.ROW, -1, 8);

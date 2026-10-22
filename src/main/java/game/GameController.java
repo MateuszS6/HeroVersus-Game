@@ -1,9 +1,9 @@
 package game;
 
-import arenas.BattleArena;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import arenas.BattleArena;
 
 public class GameController implements KeyListener {
     private final float GRID;
@@ -25,7 +25,8 @@ public class GameController implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -35,15 +36,27 @@ public class GameController implements KeyListener {
             System.out.println("[0] Debug mode: " + (debugModeOn ? "ON" : "OFF"));
         }
         if (debugModeOn) {
-            if (key == KeyEvent.VK_T) togglePlayerOutlines();
-            if (key == KeyEvent.VK_G) toggleGrid();
-            if (key == KeyEvent.VK_H) view.runDebugViewer();
+            if (key == KeyEvent.VK_T)
+                togglePlayerOutlines();
+            if (key == KeyEvent.VK_G)
+                toggleGrid();
+            if (key == KeyEvent.VK_H)
+                view.runDebugViewer();
         }
         if (!arena.isEnded())
-            if (key == KeyEvent.VK_ESCAPE) arena.togglePause(arena.isEnded());
+            if (key == KeyEvent.VK_ESCAPE)
+                arena.togglePause(arena.isEnded());
         if (arena.isPaused()) {
-            if (arena.isEnded()) if (key == KeyEvent.VK_ESCAPE) System.out.println("Feature unavailable.");
-            if (key == KeyEvent.VK_ENTER) arena.exit();
+            if (arena.isEnded())
+                if (key == KeyEvent.VK_ESCAPE)
+                    System.out.println("Feature unavailable.");
+            if (key == KeyEvent.VK_ENTER)
+                try {
+                    arena.exit();
+                } catch (Exception e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
         }
     }
 

@@ -1,11 +1,11 @@
 package arenas;
 
-import game.Game;
-import org.jbox2d.common.Vec2;
-import world.Platform;
-import world.Tile;
+import java.awt.Color;
 
-import java.awt.*;
+import org.jbox2d.common.Vec2;
+
+import game.Game;
+import world.Platform;
 
 public class OldHangar extends BattleArena {
     /**
@@ -30,5 +30,6 @@ public class OldHangar extends BattleArena {
     }
 
     @Override
-    public void populate() {}
+    public void populate() {
+    }
 }

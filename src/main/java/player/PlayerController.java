@@ -13,21 +13,33 @@ public class PlayerController implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (!player.canAcceptInput())
+            return;
+
         key = e.getKeyCode();
-        if (key == player.getKeyBindings().JUMP) player.jump();
-        if (key == player.getKeyBindings().LEFT) player.run(-1);
-        if (key == player.getKeyBindings().RIGHT) player.run(1);
-        if (key == player.getKeyBindings().ATTACK) player.attack();
+        if (key == player.getKeyBindings().JUMP)
+            player.jump();
+        if (key == player.getKeyBindings().LEFT)
+            player.run(-1);
+        if (key == player.getKeyBindings().RIGHT)
+            player.run(1);
+        if (key == player.getKeyBindings().ATTACK)
+            player.attack();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        if (!player.canAcceptInput())
+            return;
+
         key = e.getKeyCode();
         if (key == player.getKeyBindings().LEFT ||
-                key == player.getKeyBindings().RIGHT) player.idle();
+                key == player.getKeyBindings().RIGHT)
+            player.idle();
     }
 }

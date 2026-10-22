@@ -22,21 +22,20 @@ import world.DeathZone;
 import world.SideBorder;
 import world.Tile;
 
-public abstract class BattleArena extends World {
-    // TODO: 24/04/2023
-    // 1 life, best of 3, winning player chooses next arena to play in
-    // TODO: 24/04/2023
-    // Add PRACTICE ARENA with grey tiles - unlimited respawns, advances to arenas
-    // on completion OR on SKIP button
-    // TODO: 24/04/2023
-    // Desert arena, minimalistic/paper arena
+// TODO 24/04/2023: 1 life, best of 3, winning player chooses next arena to play in
+// TODO 24/04/2023: Add PRACTICE ARENA with grey tiles - unlimited respawns, advances to arenas on completion OR on SKIP button
+// TODO 24/04/2023: Desert arena, minimalistic/paper arena
+
+public abstract class BattleArena extends World implements AutoCloseable {
+    private final ArenaTimers timers = new ArenaTimers(this);
+    private boolean initialised;
+    private boolean closed;
+
     private final Game game;
     private final String title;
     private final String tilePath;
-    private final SideBorder left,
-            right;
-    private final Player player1,
-            player2;
+    private final SideBorder left, right;
+    private final Player player1, player2;
     private int winner;
     private Color bgColour;
     private Image bgImage;
@@ -76,12 +75,20 @@ public abstract class BattleArena extends World {
         // Player 2
         player2 = new Player(this, 2, Characters.WIZARD, spawn2);
         player2.setKeyBindings();
+    }
 
-        // Fill the world with tiles
-        populate();
+    public final void initialise() {
+        if (closed)
+            throw new IllegalStateException("Arena is closed");
 
-        // Change the soundtrack
-        game.setSoundtrack("crime_is_everywhere.mp3");
+        if (!initialised) {
+            populate();
+            initialised = true;
+        }
+    }
+
+    public final ArenaTimers getTimers() {
+        return timers;
     }
 
     public SideBorder getOtherSide(SideBorder thisSide) {
@@ -133,7 +140,7 @@ public abstract class BattleArena extends World {
 
     public void drawHUD(GameView v, Graphics2D g) {
         int centre = Game.WIDTH / 2;
-        int middle = Game.HEIGHT / 2;
+        // int middle = Game.HEIGHT / 2;
 
         // Arena title
         if (this instanceof RoyalArena)
@@ -175,29 +182,46 @@ public abstract class BattleArena extends World {
     }
 
     public void togglePause(boolean roundEnded) {
+        if (closed || isEnded)
+            return;
+
         isEnded = roundEnded;
-        isPaused = !isPaused;
-        game.toggleSoundtrack();
-        if (isPaused)
+        isPaused = roundEnded || !isPaused;
+
+        if (isPaused) {
             stop();
-        else
+
+            if (player1.getRespawns() > 0)
+                player1.idle();
+            if (player2.getRespawns() > 0)
+                player2.idle();
+        } else
             start();
+
+        game.toggleSoundtrack();
     }
 
-    /*
-     * public void restart() {
-     * BattleArena w = switch (title) {
-     * case "ROYAL ARENA" -> new RoyalArena(game);
-     * case "WILD FOREST" -> new WildForest(game);
-     * case "THE VOID" -> new TheVoid(game);
-     * case "OLD HANGAR" -> new OldHangar(game);
-     * default -> throw new RuntimeException("ARENA IS NULL");
-     * };
-     * game.restartArena(w);
-     * }
-     */
+    // public void restart() {
+    // BattleArena w = switch (title) {
+    // case "ROYAL ARENA" -> new RoyalArena(game);
+    // case "WILD FOREST" -> new WildForest(game);
+    // case "THE VOID" -> new TheVoid(game);
+    // case "OLD HANGAR" -> new OldHangar(game);
+    // default -> throw new RuntimeException("ARENA IS NULL");
+    // };
+    // game.restartArena(w);
+    // }
 
-    public void exit() {
+    public void exit() throws Exception {
         game.switchToMenu(Panels.TITLE_SCREEN);
+    }
+
+    @Override
+    public void close() throws Exception {
+        if (!closed) {
+            closed = true;
+            stop();
+            timers.close();
+        }
     }
 }

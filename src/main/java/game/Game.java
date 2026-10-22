@@ -18,119 +18,135 @@ import menu.TitleScreen;
 
 /** Main game entry point. */
 public final class Game {
-    public static final String MENU_MUSIC = "tension_mode.mp3";
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 600;
-    private final JFrame window;
-    private JPanel screen;
-    private SoundClip soundtrack;
-    private String soundtrackFileName;
-    private BattleArena arena;
+	public static final String MENU_MUSIC = "tension_mode.mp3";
+	public static final int WIDTH = 800;
+	public static final int HEIGHT = 600;
+	private final JFrame window;
+	private JPanel screen;
+	private SoundClip soundtrack;
+	private String soundtrackFileName;
+	private BattleArena arena;
 
-    /**
-     * Game constructor.
-     * <p>
-     * Creates a new game with the title screen and soundtrack.
-     */
-    public Game() {
-        // TODO: 30/04/2023 Main menu book-style as imagined
+	/**
+	 * Game constructor.
+	 * <p>
+	 * Creates a new game with the title screen and soundtrack.
+	 */
+	public Game() {
+		// TODO: 30/04/2023 Main menu book-style as imagined
 
-        window = new JFrame("HeroVersus");
+		window = new JFrame("HeroVersus");
 
-        screen = new TitleScreen(this);
-        // Window would have to be [816x639] to ensure the correct GameView size
-        // [800x600]
-        screen.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		screen = new TitleScreen(this);
+		// Window would have to be [816x639] to ensure the correct GameView size
+		// [800x600]
+		screen.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
-        window.setContentPane(screen); // Add the component to the window
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(false);
-        window.pack(); // Resize the window to fit the preferred size
-        window.setLocationRelativeTo(null);
-        window.setVisible(true);
-        setSoundtrack(MENU_MUSIC); // Start playing the background music
-    }
+		window.setContentPane(screen); // Add the component to the window
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setResizable(false);
+		window.pack(); // Resize the window to fit the preferred size
+		window.setLocationRelativeTo(null);
+		window.setVisible(true);
+		setSoundtrack(MENU_MUSIC); // Start playing the background music
+	}
 
-    /** Run the game. */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(Game::new);
-    }
+	/** Run the game. */
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(Game::new);
+	}
 
-    public void setSoundtrack(String fileName) {
-        if (soundtrack != null && fileName.equals(soundtrackFileName))
-            return;
+	public void setSoundtrack(String fileName) {
+		if (soundtrack != null && fileName.equals(soundtrackFileName))
+			return;
 
-        try {
-            SoundClip nextSoundtrack = new SoundClip(
-                    Resources.url("assets/sound/music/" + fileName));
+		try {
+			SoundClip nextSoundtrack = new SoundClip(
+					Resources.url("assets/sound/music/" + fileName));
 
-            nextSoundtrack.setVolume(0.3);
+			nextSoundtrack.setVolume(0.3);
 
-            if (soundtrack != null)
-                soundtrack.stop();
+			if (soundtrack != null)
+				soundtrack.stop();
 
-            soundtrack = nextSoundtrack;
-            soundtrackFileName = fileName;
-            soundtrack.loop();
-        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+			soundtrack = nextSoundtrack;
+			soundtrackFileName = fileName;
+			soundtrack.loop();
+		} catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    public void toggleSoundtrack() {
-        if (arena.isPaused())
-            soundtrack.pause();
-        else
-            soundtrack.resume();
-    }
+	public void toggleSoundtrack() {
+		if (arena.isPaused())
+			soundtrack.pause();
+		else
+			soundtrack.resume();
+	}
 
-    public void playSound(String fileName) {
-        try {
-            new SoundClip(Resources.url("assets/sound/" + fileName)).play();
-        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+	public void playSound(String fileName) {
+		try {
+			new SoundClip(Resources.url("assets/sound/" + fileName)).play();
+		} catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    public void switchToMenu(Panels panel) {
-        screen = switch (panel) {
-            case TITLE_SCREEN -> new TitleScreen(this);
-            case PLAY_SCREEN -> new PlayScreen(this);
-            case CONTROLS_PAGE -> new ControlsPage(this);
-            case ABOUT_PAGE -> new AboutPage(this);
-        };
+	public void switchToMenu(Panels panel) throws Exception {
+		closeArena();
 
-        screen.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        window.setContentPane(screen);
-        window.pack();
-        window.revalidate();
-        window.repaint();
-        setSoundtrack(MENU_MUSIC);
-    }
+		screen = switch (panel) {
+			case TITLE_SCREEN -> new TitleScreen(this);
+			case PLAY_SCREEN -> new PlayScreen(this);
+			case CONTROLS_PAGE -> new ControlsPage(this);
+			case ABOUT_PAGE -> new AboutPage(this);
+		};
 
-    public void goToArena(BattleArena a) {
-        arena = a; // Game world
-        viewArena();
-        arena.start();
-    }
+		screen.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		window.setContentPane(screen);
+		window.pack();
+		window.revalidate();
+		window.repaint();
+		setSoundtrack(MENU_MUSIC);
+	}
 
-    private void viewArena() {
-        GameView view = new GameView(arena, WIDTH, HEIGHT);
-        screen = view;
+	public void goToArena(BattleArena a) throws Exception {
+		a.initialise();
+		closeArena();
 
-        window.setContentPane(screen);
-        window.pack();
-        window.revalidate();
-        window.repaint();
+		arena = a; // Game world
+		viewArena();
+		setSoundtrack("crime_is_everywhere.mp3");
+		arena.start();
+	}
 
-        SwingUtilities.invokeLater(view::requestFocusInWindow);
-    }
+	private void viewArena() {
+		GameView view = new GameView(arena, WIDTH, HEIGHT);
+		screen = view;
 
-    // public void restartArena(BattleArena w) {
-    //     arena = w;
-    //     view = new GameView(arena, WIDTH, HEIGHT);
-    //     switchPanel(view);
-    //     view.repaint();
-    //     arena.start();
-    // }
+		window.setContentPane(screen);
+		window.pack();
+		window.revalidate();
+		window.repaint();
+
+		SwingUtilities.invokeLater(view::requestFocusInWindow);
+	}
+
+	public void closeArena() throws Exception {
+		if (screen instanceof GameView view)
+			view.close();
+
+		if (arena != null) {
+			arena.close();
+			arena = null;
+		}
+	}
+
+	// public void restartArena(BattleArena w) {
+	// arena = w;
+	// view = new GameView(arena, WIDTH, HEIGHT);
+	// switchPanel(view);
+	// view.repaint();
+	// arena.start();
+	// }
 }
