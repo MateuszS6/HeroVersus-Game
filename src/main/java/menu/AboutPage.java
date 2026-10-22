@@ -25,7 +25,7 @@ public final class AboutPage extends MenuBackground {
 		MenuStyles.gap(content, 60);
 
 		content.add(MenuStyles.label(
-				"HeroVersus - Battle Arena",
+				Game.GAME_TITLE,
 				24,
 				Font.BOLD,
 				MenuStyles.PRIMARY_TEXT));

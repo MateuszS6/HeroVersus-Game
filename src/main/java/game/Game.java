@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -17,6 +18,7 @@ import menu.TitleScreen;
 
 /** Main game entry point. */
 public final class Game {
+	public static final String GAME_TITLE = "HeroVersus: Battle Arena";
 	public static final String MENU_MUSIC = "tension_mode.mp3";
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
@@ -31,7 +33,9 @@ public final class Game {
 	 * Creates a new game with the title screen and soundtrack.
 	 */
 	public Game() {
-		window = new JFrame("HeroVersus");
+		window = new JFrame(GAME_TITLE);
+		window.setIconImage(
+				new ImageIcon(Resources.url("assets/icons/HeroVersus-line.png")).getImage());
 
 		screen = new TitleScreen(this);
 		// Window would have to be [816x639] to ensure the correct GameView size
